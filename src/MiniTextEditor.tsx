@@ -1,4 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { 
+  Bold, Italic, Underline, List, ListOrdered, 
+  AlignLeft, AlignCenter, AlignRight, Strikethrough,
+  Plus, Link, Image, Eraser, Baseline, ChevronDown
+} from 'lucide-react';
 
 export interface MiniTextEditorProps {
   value: string;
@@ -6,16 +11,6 @@ export interface MiniTextEditorProps {
   placeholder?: string;
   minHeight?: number;
 }
-
-import { Bold, Italic, Underline, List, ListOrdered } from 'lucide-react';
-
-const TOOLBAR_ACTIONS = [
-  { icon: <Bold size={16} />, command: 'bold', title: 'Bold' },
-  { icon: <Italic size={16} />, command: 'italic', title: 'Italic' },
-  { icon: <Underline size={16} />, command: 'underline', title: 'Underline' },
-  { icon: <List size={16} />, command: 'insertUnorderedList', title: 'Bullet list' },
-  { icon: <ListOrdered size={16} />, command: 'insertOrderedList', title: 'Numbered list' },
-] as const;
 
 export const getRichTextPlainValue = (value: string) =>
   value
@@ -46,35 +41,113 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
     if (!editorRef.current) {
       return;
     }
-
     onChange(editorRef.current.innerHTML);
   };
 
-  const applyCommand = (command: string) => {
+  const applyCommand = (command: string, arg: string = '') => {
     editorRef.current?.focus();
-    document.execCommand(command, false);
+    document.execCommand(command, false, arg);
     syncValue();
   };
 
+  const handleFormatBlock = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    applyCommand('formatBlock', e.target.value);
+  };
+
   return (
-    <div className="rte">
-      <div className="rte-toolbar" role="toolbar" aria-label="Text formatting">
-        {TOOLBAR_ACTIONS.map((action) => (
-          <button
-            key={action.command}
-            type="button"
-            className="rte-tool"
-            title={action.title}
-            onClick={() => applyCommand(action.command)}
-          >
-            {action.icon}
+    <div className="rte-container">
+      {/* Main Toolbar */}
+      <div className="rte-toolbar-main">
+        <div className="rte-toolbar-group">
+          <div className="rte-select-wrapper">
+            <select className="rte-select" onChange={handleFormatBlock} defaultValue="P">
+              <option value="P">Paragraph</option>
+              <option value="H1">Heading 1</option>
+              <option value="H2">Heading 2</option>
+              <option value="H3">Heading 3</option>
+              <option value="PRE">Preformatted</option>
+            </select>
+            <ChevronDown size={14} className="rte-select-icon" />
+          </div>
+        </div>
+
+        <div className="rte-separator" />
+
+        <div className="rte-toolbar-group">
+          <button type="button" className="rte-tool-btn dropdown" title="Text Color" onClick={() => applyCommand('foreColor', '#184f78')}>
+            <Baseline size={16} />
+            <ChevronDown size={10} className="rte-dropdown-icon" />
           </button>
-        ))}
+          <button type="button" className="rte-tool-btn" title="Clear Formatting" onClick={() => applyCommand('removeFormat')}>
+            <Eraser size={16} />
+          </button>
+        </div>
+
+        <div className="rte-separator" />
+
+        <div className="rte-toolbar-group">
+          <button type="button" className="rte-tool-btn" title="Bold" onClick={() => applyCommand('bold')}>
+            <Bold size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Italic" onClick={() => applyCommand('italic')}>
+            <Italic size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Underline" onClick={() => applyCommand('underline')}>
+            <Underline size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Strikethrough" onClick={() => applyCommand('strikeThrough')}>
+            <Strikethrough size={16} />
+          </button>
+        </div>
+
+        <div className="rte-separator" />
+
+        <div className="rte-toolbar-group">
+          <button type="button" className="rte-tool-btn" title="Align Left" onClick={() => applyCommand('justifyLeft')}>
+            <AlignLeft size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Align Center" onClick={() => applyCommand('justifyCenter')}>
+            <AlignCenter size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Align Right" onClick={() => applyCommand('justifyRight')}>
+            <AlignRight size={16} />
+          </button>
+        </div>
+
+        <div className="rte-separator" />
+
+        <div className="rte-toolbar-group">
+          <button type="button" className="rte-tool-btn" title="Bullet List" onClick={() => applyCommand('insertUnorderedList')}>
+            <List size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Numbered List" onClick={() => applyCommand('insertOrderedList')}>
+            <ListOrdered size={16} />
+          </button>
+        </div>
+
+        <div className="rte-separator" />
+
+        <div className="rte-toolbar-group">
+          <button type="button" className="rte-tool-btn" title="Link" onClick={() => {
+            const url = window.prompt('Enter URL:');
+            if (url) applyCommand('createLink', url);
+          }}>
+            <Link size={16} />
+          </button>
+          <button type="button" className="rte-tool-btn" title="Insert Image" onClick={() => {
+            const url = window.prompt('Enter Image URL:');
+            if (url) applyCommand('insertImage', url);
+          }}>
+            <Image size={16} />
+          </button>
+        </div>
       </div>
-      <div className="rte-editor-shell" style={{ minHeight }}>
+
+      {/* Editor Area */}
+      <div className="rte-editor-area" style={{ minHeight }}>
         <div
           ref={editorRef}
-          className="rte-editor"
+          className="rte-editor-content"
           contentEditable
           suppressContentEditableWarning
           data-placeholder={placeholder}
