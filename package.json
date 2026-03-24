@@ -1,7 +1,6 @@
 {
-  "name": "@support/rich-text-editor",
-  "version": "1.0.0",
-  "private": true,
+  "name": "mini-text-editor",
+  "version": "1.0.1",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",

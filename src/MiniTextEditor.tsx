@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export interface RichTextEditorProps {
+export interface MiniTextEditorProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -24,7 +24,7 @@ export const getRichTextPlainValue = (value: string) =>
     .replace(/\s+/g, ' ')
     .trim();
 
-export const RichTextEditor: React.FC<RichTextEditorProps> = ({
+export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
   value,
   onChange,
   placeholder = 'Write here...',
