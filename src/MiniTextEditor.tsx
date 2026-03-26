@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { 
   Bold, Italic, Underline, List, ListOrdered, 
   AlignLeft, AlignCenter, AlignRight, Strikethrough,
-  Plus, Link, Image, Eraser, Baseline, ChevronDown
+  Plus, Eraser, Baseline, Highlighter, ChevronDown
 } from 'lucide-react';
 
 export interface MiniTextEditorProps {
@@ -26,6 +26,10 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
   minHeight = 180,
 }) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const [activePicker, setActivePicker] = useState<'text' | 'bg' | null>(null);
+
+  const textColors = ['#000000', '#ef4444', '#3b82f6', '#22c55e', '#64748b'];
+  const bgColors = ['#fef08a', '#bbf7d0', '#bfdbfe', '#fecaca', '#ffffff'];
 
   useEffect(() => {
     if (!editorRef.current) {
@@ -48,6 +52,7 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
     editorRef.current?.focus();
     document.execCommand(command, false, arg);
     syncValue();
+    setActivePicker(null);
   };
 
   const handleFormatBlock = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -55,7 +60,7 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
   };
 
   return (
-    <div className="rte-container">
+    <div className="rte-container" onMouseLeave={() => setActivePicker(null)}>
       {/* Main Toolbar */}
       <div className="rte-toolbar-main">
         <div className="rte-toolbar-group">
@@ -74,10 +79,54 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
         <div className="rte-separator" />
 
         <div className="rte-toolbar-group">
-          <button type="button" className="rte-tool-btn dropdown" title="Text Color" onClick={() => applyCommand('foreColor', '#184f78')}>
-            <Baseline size={16} />
-            <ChevronDown size={10} className="rte-dropdown-icon" />
-          </button>
+          <div style={{ position: 'relative' }}>
+            <button 
+              type="button" 
+              className={`rte-tool-btn dropdown ${activePicker === 'text' ? 'active' : ''}`}
+              title="Text Color" 
+              onClick={() => setActivePicker(activePicker === 'text' ? null : 'text')}
+            >
+              <Baseline size={16} />
+              <ChevronDown size={10} className="rte-dropdown-icon" />
+            </button>
+            {activePicker === 'text' && (
+              <div className="rte-color-picker">
+                {textColors.map(color => (
+                  <div 
+                    key={color} 
+                    className="rte-color-swatch" 
+                    style={{ background: color }} 
+                    onClick={() => applyCommand('foreColor', color)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div style={{ position: 'relative' }}>
+            <button 
+              type="button" 
+              className={`rte-tool-btn dropdown ${activePicker === 'bg' ? 'active' : ''}`}
+              title="Background Color" 
+              onClick={() => setActivePicker(activePicker === 'bg' ? null : 'bg')}
+            >
+              <Highlighter size={16} />
+              <ChevronDown size={10} className="rte-dropdown-icon" />
+            </button>
+            {activePicker === 'bg' && (
+              <div className="rte-color-picker">
+                {bgColors.map(color => (
+                  <div 
+                    key={color} 
+                    className="rte-color-swatch" 
+                    style={{ background: color, border: color === '#ffffff' ? '1px solid #e2e8f0' : 'none' }} 
+                    onClick={() => applyCommand('hiliteColor', color)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
           <button type="button" className="rte-tool-btn" title="Clear Formatting" onClick={() => applyCommand('removeFormat')}>
             <Eraser size={16} />
           </button>
@@ -124,23 +173,6 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
             <ListOrdered size={16} />
           </button>
         </div>
-
-        <div className="rte-separator" />
-
-        <div className="rte-toolbar-group">
-          <button type="button" className="rte-tool-btn" title="Link" onClick={() => {
-            const url = window.prompt('Enter URL:');
-            if (url) applyCommand('createLink', url);
-          }}>
-            <Link size={16} />
-          </button>
-          <button type="button" className="rte-tool-btn" title="Insert Image" onClick={() => {
-            const url = window.prompt('Enter Image URL:');
-            if (url) applyCommand('insertImage', url);
-          }}>
-            <Image size={16} />
-          </button>
-        </div>
       </div>
 
       {/* Editor Area */}
@@ -152,6 +184,29 @@ export const MiniTextEditor: React.FC<MiniTextEditorProps> = ({
           suppressContentEditableWarning
           data-placeholder={placeholder}
           onInput={syncValue}
+          onPaste={(e) => {
+            const text = e.clipboardData.getData('text/plain');
+            if (!text) return;
+
+            try {
+              // Basic check if it looks like a URL
+              const url = new URL(text.trim());
+              // Check if it's http or https
+              if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+                return; // Let default paste handle it
+              }
+
+              e.preventDefault();
+              const domain = url.hostname.replace(/^www\./, '');
+              const linkHtml = `<a href="${url.href}" title="${url.href}" target="_blank" rel="noopener noreferrer" style="color: #2563eb; text-decoration: underline;">${domain}</a>&nbsp;`;
+              
+              document.execCommand('insertHTML', false, linkHtml);
+              syncValue();
+            } catch (err) {
+              // Not a valid URL, let default paste happen
+              return;
+            }
+          }}
         />
       </div>
     </div>
