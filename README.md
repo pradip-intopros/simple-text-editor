@@ -37,4 +37,19 @@ function MyComponent() {
 - `tools`: (EditorTool[], optional) Array of tools to display.
 
 ### Available Tools
-`'format'`, `'bold'`, `'italic'`, `'underline'`, `'strike'`, `'color'`, `'highlight'`, `'clear'`, `'align-left'`, `'align-center'`, `'align-right'`, `'list'`, `'ordered-list'`
+
+| Tool | Description |
+| :--- | :--- |
+| `'format'` | Paragraph and Heading (H1-H3) dropdown |
+| `'bold'` | Bold text |
+| `'italic'` | Italicize text |
+| `'underline'` | Underline text |
+| `'strike'` | Strikethrough text |
+| `'color'` | Text color picker |
+| `'highlight'` | Background color picker |
+| `'clear'` | Clear all formatting |
+| `'align-left'` | Align text to left |
+| `'align-center'` | Center text |
+| `'align-right'` | Align text to right |
+| `'list'` | Unordered (bullet) list |
+| `'ordered-list'` | Ordered (numbered) list |
