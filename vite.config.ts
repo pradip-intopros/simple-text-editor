@@ -11,6 +11,7 @@ export default defineConfig({
     dts({
       include: ['src'],
       insertTypesEntry: true,
+      rollupTypes: true,
     }),
   ],
   build: {
@@ -18,14 +19,16 @@ export default defineConfig({
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'MiniTextEditor',
       formats: ['es', 'umd'],
-      fileName: (format) => `index.${format}.js`,
+      fileName: (format) => (format === 'es' ? 'index.mjs' : `index.${format}.js`),
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'jsxRuntime',
+          'react/jsx-dev-runtime': 'jsxDevRuntime',
         },
       },
     },
