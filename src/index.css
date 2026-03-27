@@ -1,0 +1,258 @@
+.rte-container {
+  border: 1px solid #d1d9e2;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+}
+
+.rte-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.rte-media-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rte-media-btn:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.rte-view-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.rte-view-tabs button {
+  height: 30px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.rte-view-tabs button.active {
+  color: #0f172a;
+}
+
+.rte-toolbar-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  padding: 8px 12px;
+  background: #fbfcfe;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.rte-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rte-separator {
+  width: 1px;
+  height: 20px;
+  background: #e2e8f0;
+  margin: 0 12px;
+}
+
+.rte-select-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.rte-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  height: 28px;
+  padding: 0 24px 0 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.rte-select::-ms-expand {
+  display: none;
+}
+
+.rte-select:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.rte-select-icon {
+  position: absolute;
+  right: 8px;
+  pointer-events: none;
+  color: #94a3b8;
+}
+
+.rte-tool-btn {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #475569;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.rte-tool-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.rte-tool-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.rte-editor-area {
+  position: relative;
+}
+
+.rte-editor-content {
+  min-height: inherit;
+  padding: 20px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #1e293b;
+  outline: none;
+}
+
+.rte-editor-content:empty::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+}
+
+.rte-text-editor {
+  width: 100%;
+  min-height: inherit;
+  padding: 20px;
+  border: none;
+  resize: vertical;
+  font-family: monospace;
+  font-size: 0.9rem;
+  outline: none;
+  background: #f8fafc;
+  color: #334155;
+}
+
+.rte-editor-content h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+.rte-editor-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 20px 0 12px;
+  color: #0f172a;
+}
+
+.rte-editor-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 16px 0 10px;
+  color: #0f172a;
+}
+
+.rte-editor-content p {
+  margin: 0 0 12px;
+}
+
+.rte-editor-content ul,
+.rte-editor-content ol {
+  padding-left: 24px;
+  margin-bottom: 12px;
+}
+
+.rte-tool-btn.dropdown {
+  width: auto;
+  padding: 0 8px;
+  gap: 2px;
+}
+
+.rte-dropdown-icon {
+  color: #94a3b8;
+  margin-left: 2px;
+}
+
+.rte-color-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  gap: 4px;
+  padding: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  margin-top: 4px;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.rte-color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.1s;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.rte-color-swatch:hover {
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
